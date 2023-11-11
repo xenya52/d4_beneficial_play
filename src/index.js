@@ -1,5 +1,5 @@
 import "dotenv/config"
-import {initBot, login} from "./controller/bot.js"
+import {initBot, login, diablo_commands} from "./controller/bot.js"
 import {
     MatrixClient,
     SimpleFsStorageProvider,
@@ -16,4 +16,8 @@ const client = initBot(
     process.env.MATRIX_HOMESERVER,
     accessToken,
     process.env.BOT_STORAGE
+)
+
+const message = diablo_commands(
+    client
 )
