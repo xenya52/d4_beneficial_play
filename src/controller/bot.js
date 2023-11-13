@@ -4,6 +4,7 @@ import {
     AutojoinRoomsMixin,
     MatrixAuth,
 } from "matrix-bot-sdk"
+import { diablo_site_data } from "./scrape.js";
 
 export async function login(homeserverUrl, username, password) {
     const auth = new MatrixAuth(homeserverUrl);
@@ -47,9 +48,10 @@ function diablo_help(client, roomId) {
         "body": "-w = Is diablo worthy to play",
     })
 }
-function diablo_worthy(client, roomId) {
+async function diablo_worthy(client, roomId) {
     client.sendMessage(roomId, {
         "msgtype": "m.text",
         "body": "worthy function coming...",
     })
+    console.log(await diablo_site_data())
 }
