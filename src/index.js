@@ -1,5 +1,13 @@
 import "dotenv/config"
-import {initBot, login, diablo_commands} from "./controller/bot.js"
+import {
+    initBot, 
+    login, 
+    diablo_commands} from "./controller/bot.js"
+import {
+    diablo_site_helltide_data,
+    diablo_site_legion_data,
+    diablo_site_worldboss_data
+} from "./controller/scrape.js"
 import {
     MatrixClient,
     SimpleFsStorageProvider,
@@ -19,5 +27,8 @@ const client = initBot(
 )
 
 const message = diablo_commands(
-    client
+    client,
+    diablo_site_helltide_data,
+    diablo_site_legion_data,
+    diablo_site_worldboss_data
 )
