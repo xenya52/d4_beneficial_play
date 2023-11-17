@@ -29,59 +29,69 @@ export function diablo_commands(client, helltide, boss, legion) {
         
         const sender = event["sender"];
         const body = event["content"]["body"];
-
-        const current_date = new Date().getTime()
-
         console.log(`${roomId}: ${sender} says '${body}`);
 
         if (body.startsWith("diablo -w")) {
         }
+
         else if (body.startsWith("diablo -h")) {
             const helltide_data = await helltide()
             console.log(helltide_data)
 
-            const event_start = helltide_data.timestamp * 1000
-            const time_span = (current_date - event_start) / 1000 / 60
-            const event_start_hours = new Date(helltide_data.timestamp / 1000).getHours()
-            const event_start_minutes = new Date(helltide_data.timestamp / 1000).getMinutes()
+            const current_zone = helltide_data.zone
+            console.log(current_zone)
 
-            const body = `Zone = ${helltide_data.zone}
-Time = ${event_start_hours}h ${event_start_minutes}min
-Remaining = ${time_span.toFixed(0)}min`
-            if (helltide_data.refresh > 0) {
-                client.sendMessage(roomId,{
-                    "msgtype": "m.text",
-                    "body": body,
-                })
-            }
-            else {
-                client.sendMessage(roomId, {
-                    "msgtype": "m.text",
-                    "body": "Helltide is active! See: https://helltides.com/"
-                })
-            }
+            const body = `<HELLTIDE>
+Zone = ${current_zone}`
+            client.sendMessage(roomId, {
+                "msgtype": "m.text",
+                "body": body,
+            })
         }
+
         else if (body.startsWith("diablo -l")) {
-            const legion_data = legion
-            console.log(legion)
+            const legion_data = await legion()
+            console.log(legion_data)
+
+            const current_zone = legion_data.zone
+            console.log(current_zone)
+
+            const body = `<LEGION>
+Zone = ${current_zone}`
+            client.sendMessage(roomId, {
+                "msgtype": "m.text",
+                "body": body,
+            })
         }
-        else if (body.startsWith("diablo -w")) {
-             console.log(await boss())
+        
+        else if (body.startsWith("diablo -b")) {
+             const boss_data = await boss()
+             console.log(boss_data)
+
+             const current_zone = boss_data.zone
+             console.log(current_zone)
+
+             const body = `<WORLDBOSS>
+Zone = ${current_zone}`
+            client.sendMessage(roomId, {
+                "msgtype": "m.text",
+                "body": body,
+            })
+        }
+        else if (body.startsWith("diablo")) {
+            diablo_help(client, roomId)
         }
     })
 }
 
 function diablo_help(client, roomId) {
+    const body = `diablo -w | Is diablo worthy to play?
+diablo -h | Information about helltide!
+diablo -l | Information about legion!
+diablo -b | Information about worldboss! >..[o-o]`
     client.sendMessage(roomId, {
         "msgtype": "m.text",
-        "body": "-w = Is diablo worthy to play",
+        "body": body,
     })
-}
-async function diablo_worthy(client, roomId, helltide, boss, legion) {
-    client.sendMessage(roomId, {
-        "msgtype": "m.text",
-        "body": "worthy function coming...",
-    })
-    //console.log(await diablo_site_data())
-    return diablo_site_helltide_data
+    return 0
 }
