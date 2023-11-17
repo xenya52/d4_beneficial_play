@@ -95,3 +95,5 @@ diablo -b | Information about worldboss! >..[o-o]`
     })
     return 0
 }
+
+// https://www.youtube.com/watch?v=dQw4w9WgXcQ
