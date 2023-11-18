@@ -41,6 +41,12 @@ export function diablo_commands(client, helltide, boss, legion) {
             const current_zone = helltide_data.zone
             console.log(current_zone)
 
+            //Time calculation
+            const time_current = new Date()
+            const time_begin = new Date("2023-11-18T18:30:00Z");
+
+            console.log(time_current, time_begin)
+
             const body = `<HELLTIDE>
 Zone = ${current_zone}`
             client.sendMessage(roomId, {
