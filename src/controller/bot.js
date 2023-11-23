@@ -42,17 +42,32 @@ export function diablo_commands(client, helltide, boss, legion) {
             console.log(current_zone)
 
             //Time calculation
-            const time_current = new Date()
-            const time_begin = new Date("2023-11-18T18:30:00Z");
+            const time_current = Date.now()
+            const time_begin = 1700328600 * 1000
+            const time_span = 8100 * 1000
+            const time_after = time_begin + time_span
 
-            console.log(time_current, time_begin)
+            const body_active = `<!!!HELLTIDE!!!>
+is active
+remaining time  = 
+current zone    = ${current_zone}
+More infos?     = https://helltides.com/`
+            const body_unactive = `<HELLTIDE>
+is unactive    
+Zone    = ${current_zone}
+current = ${time_current}
+begin   = ${time_begin}
+span    = ${time_span}
+after   = ${time_after}`
+            if (time_current > time_begin) { //helltide is active
+                client.sendMessage(roomId, {
+                    "msgtype": "m.text",
+                    "body": body_unactive,
+                })
+            }
+            else { //helltide is not active
 
-            const body = `<HELLTIDE>
-Zone = ${current_zone}`
-            client.sendMessage(roomId, {
-                "msgtype": "m.text",
-                "body": body,
-            })
+            }
         }
 
         else if (body.startsWith("diablo -l")) {
