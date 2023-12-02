@@ -42,31 +42,38 @@ export function diablo_commands(client, helltide, boss, legion) {
             console.log(current_zone)
 
             //Time calculation
-            const time_current = Date.now()
-            const time_span = 8100 * 1000
-            const event = (time_current % time_span) / 1000
+            const time_current = Date.now() / 1000
+            const time_span = 8100
+            const event = time_current % time_span
+            const event_time_remaining = event
+            const helltide_active = (time_span - event_time_remaining) / 60 - 60
+            const helltide_inactive = (time_span - event_time_remaining + 900) / 60
 
-            const body_active = `<!!!HELLTIDE!!!>
-is active
-remaining time  = 
-current zone    = ${current_zone}
-More infos?     = https://helltides.com/`
-            const body_unactive = `<HELLTIDE>
+            const body_active = `
+<!!!HELLTIDE_ACTIVE!!!>
+current Zone    = ${current_zone}
+remaining time  = ${helltide_active.toFixed(0)}m
+More infos?     = https://helltides.com/
+`
+            const body_inactive = `
+<...HELLTIDE_INACTIVE...>
 is unactive    
 Zone    = ${current_zone}
-time_current = ${time_current}
-time_spam = ${time_span}
-event = ${event}
+remaining time  = ${helltide_inactive.toFixed(0)}m
 `
-            if (time_current > time_begin) { //helltide is active
+            if(helltide_active > 0) {
                 client.sendMessage(roomId, {
                     "msgtype": "m.text",
-                    "body": body_unactive,
+                    "body": body_active,
                 })
             }
-            else { //helltide is not active
-
+            else {
+                client.sendMessage(roomId, {
+                    "msgtype": "m.text",
+                    "body": body_inactive,
+                })
             }
+                
         }
 
         else if (body.startsWith("diablo -l")) {
@@ -75,15 +82,42 @@ event = ${event}
 
             const current_zone = legion_data.zone
             console.log(current_zone)
+            
+            //Time calculation
+            const time_current = Date.now() / 1000
+            const time_span = 1500
+            const event = time_current % time_span
+            const event_time_remaining = event
+            const legion_active = (time_span - event_time_remaining) / 60 
+            const legion_inactive = (time_span - event_time_remaining - 330) / 60
 
-            const body = `<LEGION>
-Zone = ${current_zone}`
-            client.sendMessage(roomId, {
-                "msgtype": "m.text",
-                "body": body,
-            })
+            const body_active = `
+<!!!LEGION_ACTIVE!!!>
+current zone    = ${current_zone}
+More infos?     = https://helltides.com/
+`
+            const body_inactive = `
+<...LEGION_INACTIVE...>
+Zone    = ${current_zone}
+remaining time  = ${legion_inactive.toFixed(0)}
+`
+            if(legion_inactive < 0) {
+                client.sendMessage(roomId, {
+                    "msgtype": "m.text",
+                    "body": body_active,
+                })
+            }
+            else {
+                client.sendMessage(roomId, {
+                    "msgtype": "m.text",
+                    "body": body_inactive,
+                })
+            }
         }
-        
+        else if (body.startsWith("diablo")) {
+            diablo_help(client,roomId);
+        }
+/*
         else if (body.startsWith("diablo -b")) {
              const boss_data = await boss()
              console.log(boss_data)
@@ -91,8 +125,10 @@ Zone = ${current_zone}`
              const current_zone = boss_data.zone
              console.log(current_zone)
 
-             const body = `<WORLDBOSS>
-Zone = ${current_zone}`
+             const body = `
+<WORLDBOSS>
+Zone = ${current_zone}
+`
             client.sendMessage(roomId, {
                 "msgtype": "m.text",
                 "body": body,
@@ -101,11 +137,13 @@ Zone = ${current_zone}`
         else if (body.startsWith("diablo")) {
             diablo_help(client, roomId)
         }
+        */
     })
 }
 
 function diablo_help(client, roomId) {
-    const body = `diablo -w | Is diablo worthy to play?
+    const body = `
+diablo -w | Is diablo worthy to play?
 diablo -h | Information about helltide!
 diablo -l | Information about legion!
 diablo -b | Information about worldboss! >..[o-o]`
