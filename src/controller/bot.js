@@ -58,7 +58,7 @@ More infos?     = https://helltides.com/
             const body_inactive = `
 <...HELLTIDE_INACTIVE...>
 is unactive    
-Zone    = ${current_zone}
+Zone            = ${current_zone}
 remaining time  = ${helltide_inactive.toFixed(0)}m
 `
             if(helltide_active > 0) {
@@ -98,7 +98,7 @@ More infos?     = https://helltides.com/
 `
             const body_inactive = `
 <...LEGION_INACTIVE...>
-Zone    = ${current_zone}
+Zone            = ${current_zone}
 remaining time  = ${legion_inactive.toFixed(0)}
 `
             if(legion_inactive < 0) {
@@ -114,30 +114,42 @@ remaining time  = ${legion_inactive.toFixed(0)}
                 })
             }
         }
+        else if (body.startsWith("diablo -b")) {
+            const boss_data = await boss()
+            console.log(boss_data)
+
+            const current_zone = boss_data.zone
+            console.log(current_zone)
+
+            const time_current = Date.now() / 1000
+            const timestamp_next = boss_data.nextExpected
+            const boss_activity = (timestamp_next - time_current + 3870) / 60
+
+             const body_inactive = `
+<...WORLDBOSS_INACTIVE...>
+Zone           = ${current_zone}
+time remaining = ${boss_activity.toFixed(0)}m
+`
+            const body_active = `
+<!!!WORLDBOSS_AKTIVE!!!>
+Zone = ${current_zone}
+`
+            if(boss_activity < 0) {
+                client.sendMessage(roomId, {
+                    "msgtype": "m.text",
+                    "body": body_active,
+                })
+            }
+            else {
+                client.sendMessage(roomId, {
+                    "msgtype": "m.text",
+                    "body": body_inactive,
+                })
+            }
+        }
         else if (body.startsWith("diablo")) {
             diablo_help(client,roomId);
         }
-/*
-        else if (body.startsWith("diablo -b")) {
-             const boss_data = await boss()
-             console.log(boss_data)
-
-             const current_zone = boss_data.zone
-             console.log(current_zone)
-
-             const body = `
-<WORLDBOSS>
-Zone = ${current_zone}
-`
-            client.sendMessage(roomId, {
-                "msgtype": "m.text",
-                "body": body,
-            })
-        }
-        else if (body.startsWith("diablo")) {
-            diablo_help(client, roomId)
-        }
-        */
     })
 }
 
